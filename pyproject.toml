@@ -8,7 +8,7 @@ source = "vcs"
 [project]
 name = "jsonschema"
 description = "An implementation of JSON Schema validation for Python"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "MIT"
 license-files = ["COPYING"]
 keywords = [
@@ -26,11 +26,10 @@ classifiers = [
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
   "Topic :: File Formats :: JSON",
@@ -47,17 +46,17 @@ dependencies = [
 [project.optional-dependencies]
 format = [
   "fqdn",
-  "idna",
+  "idna>=0.3",
   "isoduration",
   "jsonpointer>1.13",
   "rfc3339-validator",
-  "rfc3987",
+  "rfc3987>=1.3",
   "uri_template",
   "webcolors>=1.11",
 ]
 format-nongpl = [
   "fqdn",
-  "idna",
+  "idna>=0.3",
   "isoduration",
   "jsonpointer>1.13",
   "rfc3339-validator",
@@ -81,6 +80,18 @@ Source = "https://github.com/python-jsonschema/jsonschema"
 
 [dependency-groups]
 test = ["virtue", "jsonpath-ng"]
+benchmarks = ["pyperf"]
+docs = [
+  "furo",
+  "lxml",
+  "sphinx<9",  # sphinx 9 appears to have issues I haven't diagnosed
+  "sphinx-autoapi",
+  "sphinx-autodoc-typehints",
+  "sphinx-copybutton",
+  "sphinx-json-schema-spec",
+  "sphinxcontrib-spelling>5",
+  "sphinxext-opengraph",
+]
 
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
 content-type = "text/x-rst"
@@ -105,6 +116,11 @@ Release Information
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
 path = "CHANGELOG.rst"
 pattern = "(^v.+?)\nv"
+
+[tool.hatch.build.targets.wheel]
+exclude = [
+  "/jsonschema/benchmarks",
+]
 
 [tool.coverage.html]
 show_contexts = true
@@ -158,6 +174,7 @@ ignore = [
   "B905",    # No need for explicit strict, this is simply zip's default behavior
   "C408",    # Calling dict is fine when it saves quoting the keys
   "C901",    # Not really something to focus on
+  "CPY",     # No need for copyright notices.
   "D105",    # It's fine to not have docstrings for magic methods.
   "D107",    # __init__ especially doesn't need a docstring
   "D200",    # This rule makes diffs uglier when expanding docstrings
@@ -179,6 +196,7 @@ ignore = [
   "PLR0912",
   "PLR0913",
   "PLR0915",
+  "PLR0917",
   "PLR1714", # This makes for uglier comparisons sometimes
   "PLW0642", # Shadowing self also isn't a big deal.
   "PLW2901", # Shadowing for loop variables is occasionally fine.
